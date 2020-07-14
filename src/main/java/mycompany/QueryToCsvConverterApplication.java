@@ -51,6 +51,7 @@ public class QueryToCsvConverterApplication extends SpringBootServletInitializer
         hibernateProperties.put("hibernate.dialect", env.getProperty("spring.jpa.properties.hibernate.dialect"));
         hibernateProperties.put("hibernate.show_sql", env.getProperty("spring.jpa.properties.hibernate.show_sql"));
         hibernateProperties.put("hibernate.hbm2ddl.auto", env.getProperty("spring.jpa.hibernate.ddl-auto"));
+        hibernateProperties.put("hibernate.temp.use_jdbc_metadata_defaults", env.getProperty("spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults"));
         sessionFactory.setHibernateProperties(hibernateProperties);
 
         return sessionFactory;

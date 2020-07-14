@@ -13,16 +13,15 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.text.SimpleDateFormat;
 
 @Service
 public class QueryDataServiceImpl implements QueryDataService{
     private SessionFactory sf;
     private ExportData2CSV csv;
     private ResourceLoader resourceLoader;
+    private String pdn;
 
     public QueryDataServiceImpl(SessionFactory sf,ExportData2CSV csv,ResourceLoader resourceLoader) {
         this.sf = sf;
@@ -57,17 +56,20 @@ public class QueryDataServiceImpl implements QueryDataService{
     @Override
     public void readTextFileTableRecords() throws IOException {
 
-        Resource[] resource = this.loadResources("classpath*:*.data");
+        Resource[] resource = this.loadResources("classpath*:*/*.data");
         for(Resource r:resource){
             File columnFile = r.getFile();
             String fn = columnFile.getName();
             InputStream is = new FileInputStream(columnFile);
+            pdn  = columnFile.getParentFile().getName();
             String columns = readStream(is);
             getRecords(columns,fn.substring(0,fn.length()-5));}
     }
 
     private void saveRecordsAsCSV(ResultSet rset,String fileName) throws IOException, SQLException {
-        csv.ExportData2CSV(rset,"C:\\Users\\developer\\Documents\\"+fileName+"_processed.csv",true,",");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String ts = sdf.format(new Timestamp(System.currentTimeMillis()));
+        csv.ExportData2CSV(rset,"C:\\Users\\developer\\Documents\\"+pdn+"_"+fileName+"_"+ts+".csv",true,",");
         csv.createFileCsv();
     }
 
