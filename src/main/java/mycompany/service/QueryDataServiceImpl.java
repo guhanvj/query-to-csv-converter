@@ -5,6 +5,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.jdbc.ReturningWork;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
@@ -22,6 +23,8 @@ public class QueryDataServiceImpl implements QueryDataService{
     private ExportData2CSV csv;
     private ResourceLoader resourceLoader;
     private String pdn;
+    @Value("${csv.file.location}")
+    private String csvPath;
 
     public QueryDataServiceImpl(SessionFactory sf,ExportData2CSV csv,ResourceLoader resourceLoader) {
         this.sf = sf;
@@ -69,7 +72,7 @@ public class QueryDataServiceImpl implements QueryDataService{
     private void saveRecordsAsCSV(ResultSet rset,String fileName) throws IOException, SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String ts = sdf.format(new Timestamp(System.currentTimeMillis()));
-        csv.ExportData2CSV(rset,"C:\\Users\\developer\\Documents\\"+pdn+"_"+fileName+"_"+ts+".csv",true,",");
+        csv.ExportData2CSV(rset,csvPath+pdn+"_"+fileName+"_"+ts+".csv",true,",");
         csv.createFileCsv();
     }
 
