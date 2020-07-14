@@ -1,6 +1,7 @@
 package mycompany.web;
 
 import mycompany.service.QueryDataService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
@@ -19,6 +20,7 @@ public class FileDataController {
     }
 
     @GetMapping(path = "/read/files")
+    @ResponseStatus(HttpStatus.OK)
     public void readTextFileTableRecords() throws IOException {
         queryDataService.readTextFileTableRecords();
     }
